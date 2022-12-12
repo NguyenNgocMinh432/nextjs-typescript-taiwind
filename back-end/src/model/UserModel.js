@@ -15,23 +15,27 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		isAdmin: {
-			type: Boolean,
-			require: true,
-			default: false,
+		confirmPassword: {
+			type: String,
+			required: true,
 		},
+		// isAdmin: {
+		// 	type: Boolean,
+		// 	require: true,
+		// 	default: false,
+		// },
 		phone: {
 			type: Number,
 			required: true,
 		},
-		access_token: {
-			type: String,
-			required: true,
-		},
-		refresh_token: {
-			type: String,
-			required: true,
-		},
+		// access_token: {
+		// 	type: String,
+		// 	required: true,
+		// },
+		// refresh_token: {
+		// 	type: String,
+		// 	required: true,
+		// },
 	},
 	{
 		timestamp: true,
