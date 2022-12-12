@@ -10,7 +10,9 @@ app.use(cors());
 const port = process.env.PORT || 30002;
 
 app.get('/', (req, res) => {
-    console.log("hehe")
+    res.status(200).json({
+        name: "Minh"
+    })
 })
 
 
