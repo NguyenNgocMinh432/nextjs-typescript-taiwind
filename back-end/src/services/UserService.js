@@ -7,7 +7,6 @@ const createUser = (newUser) => {
 			const checkUser = await User.findOne({
 				email: email
 			});
-            console.log(checkUser)
 			if (checkUser !== null) {
 				return res.status(200).json({
 					status: "ERR",
@@ -35,4 +34,36 @@ const createUser = (newUser) => {
 		}
 	});
 };
-export default { createUser };
+const loginUser = (newUser) => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const { name, email, password, confirmPassword, phone } = newUser;
+			const checkUser = await User.findOne({
+				email: email
+			});
+			if (checkUser === null) {
+				return res.status(200).json({
+					status: "ERR",
+					message: "user is not defined",
+				});
+			} else {
+				const comp = bcrypt.compareSync(password, checkUser.password);
+				if (comp) {
+					resolve({
+						status: "OK",
+						message: "logged successfully!!!",
+						data: checkUser,
+					});
+				} else {
+					return res.status(200).json({
+						status: "ERR",
+						message: "user is not defined",
+					});
+				}
+			}
+		} catch (err) {
+			reject(err);
+		}
+	});
+}
+export default { createUser, loginUser };
