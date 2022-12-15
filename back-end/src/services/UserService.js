@@ -1,5 +1,6 @@
 import User from "../model/UserModel.js";
 import bcrypt from 'bcrypt';
+import { generalAccessToken, generalRefreshToken } from "../middleware/jwt.js";
 const createUser = (newUser) => {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -27,6 +28,11 @@ const createUser = (newUser) => {
 						message: "success",
 						data: createUser,
 					});
+				} else {
+					resolve({
+						status: 'Ok',
+						message: "error password incorrect",
+					})
 				}
 			}
 		} catch (err) {
@@ -49,11 +55,22 @@ const loginUser = (newUser) => {
 			} else {
 				const comp = bcrypt.compareSync(password, checkUser.password);
 				if (comp) {
+					const access_token = generalAccessToken({
+						id: checkUser._id,
+						isAdmin: checkUser.isAdmin
+					})
+					const refresh_token = generalRefreshToken({
+						id: checkUser._id,
+						isAdmin: checkUser.isAdmin
+					})
 					resolve({
 						status: "OK",
 						message: "logged successfully!!!",
 						data: checkUser,
+						access_Token: access_token,
+						refresh_token
 					});
+					
 				} else {
 					return res.status(200).json({
 						status: "ERR",
@@ -66,4 +83,18 @@ const loginUser = (newUser) => {
 		}
 	});
 }
-export default { createUser, loginUser };
+const updateUser = (userId, data) => {
+	return new Promise(async (resolve, reject) => {
+		const checkUser = await User.findOne({
+			_id: userId,
+		})
+		if (checkUser === null) {
+			return res.status(200).json({
+				status: "ERR",
+				message: "the user is not defined"
+			})
+		}
+		const updatedUser = await User.findByIdAndUpdate(userId, data)
+	})
+}
+export default { createUser, loginUser, updateUser };
