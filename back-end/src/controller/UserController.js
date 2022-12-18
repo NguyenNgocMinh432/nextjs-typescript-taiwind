@@ -1,5 +1,6 @@
 import UserService from "../services/UserService.js";
-const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const regex =
+	/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const UserController = {
 	createUser: async (req, res) => {
 		try {
@@ -37,7 +38,7 @@ const UserController = {
 	},
 	loginUser: async (req, res, next) => {
 		const { name, email, password, confirmPassword, phone } = req.body;
-		if ( !name || !email || !password || !confirmPassword || !phone ) {
+		if (!name || !email || !password || !confirmPassword || !phone) {
 			return res.status(200).json({
 				status: "ERR",
 				message: "The input is required",
@@ -70,12 +71,25 @@ const UserController = {
 			if (!userId) {
 				return res.status(200).json({
 					status: "ERR",
-					message: "the is userId is required"
-				})
+					message: "the is userId is required",
+				});
 			}
 			const response = await UserService.updateUser(userId, data);
 			return res.status(200).json(response);
-		} catch (err) {
+		} catch (err) {}
+	},
+	deleteUser: async (req, res) => {
+		try {
+			const userId = req.params.id;
+			if (!userId) {
+				return res.status(200).json({
+					status: "ERR",
+					message: "the is userId is required",
+				});
+			}
+			const response = await UserService.deleteUser(userId);
+			return res.status(200).json(response);
+		}catch(err) {
 
 		}
 	}
