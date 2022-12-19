@@ -13,7 +13,7 @@ export const authMiddleware = (req, res, next) => {
         }
         if (decode) {
             const {payload} = decode;
-            if ( payload.isAdmin ) {
+            if ( payload?.isAdmin ) {
                 next();
             } else {
                 return res.status(404).json({

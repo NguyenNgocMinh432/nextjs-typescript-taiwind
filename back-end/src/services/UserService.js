@@ -2,7 +2,6 @@ import User from "../model/UserModel.js";
 import bcrypt from "bcrypt";
 import { generalAccessToken, generalRefreshToken } from "../middleware/jwt.js";
 const createUser = (newUser) => {
-	console.log(newUser);
 	return new Promise(async (resolve, reject) => {
 		try {
 			const { name, email, password, confirmPassword, phone, isAdmin } = newUser;
@@ -24,7 +23,9 @@ const createUser = (newUser) => {
 					password: hash,
 					confirmPassword,
 					phone,
-					isAdmin
+					isAdmin,
+					access_token,
+					refresh_token
 				});
 				if (createUser) {
 					resolve({
@@ -127,4 +128,37 @@ const deleteUser = (userId) => {
 		});
 	});
 };
-export default { createUser, loginUser, deleteUser };
+const getAllUser = () => {
+	return new Promise(async(resolve, reject) => {
+		const response = await User.find();
+		resolve({
+			status: "SUCCESS",
+			message: "get user successfully",
+			data: response
+		});
+	})
+}
+const getDetailUser = (userId) => {
+	console.log("userId", userId);
+	return new Promise(async (resolve, reject) => {
+		try {
+			const user = await User.find({
+				_id:userId
+			})
+			if (!user) {
+				resolve({
+					status: 'error',
+					message: "user is not defined"
+				})
+			}
+			resolve({
+				status: 'success',
+				message: "get detail successfully",
+				data: user
+			})
+		} catch (err) {
+
+		}
+	})
+}
+export default { createUser, loginUser, deleteUser, getAllUser, getDetailUser };

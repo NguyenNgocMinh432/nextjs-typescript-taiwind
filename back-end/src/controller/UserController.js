@@ -93,6 +93,35 @@ const UserController = {
 		}catch(err) {
 
 		}
+	},
+	getAll: async (req, res) => {
+		try {
+			const response = await UserService.getAllUser();
+			return res.status(200).json(response);
+		} catch(err) {
+
+		}
+	},
+	getDetailUser: async (req, res) => {
+		console.log("req", req);
+		try {
+			const userId = req.params.id;
+			console.log(userId);
+			if (!userId) {
+				return res.status(200).json({
+					status: "ERR",
+					message: "the is userId is required",
+				});
+			}
+			const response = await UserService.getDetailUser(userId);
+			return res.status(200).json({
+				status: "OK",
+				message: "get detail successfully",
+				data: response
+			})
+		} catch (err) {
+
+		}
 	}
 };
 export default UserController;
