@@ -4,7 +4,7 @@ const regex =
 const UserController = {
 	createUser: async (req, res) => {
 		try {
-			const { name, email, password, confirmPassword, phone } = req.body;
+			const { name, email, password, confirmPassword, phone, isAdmin } = req.body;
 			if (!name || !email || !password || !confirmPassword || !phone) {
 				return res.status(200).json({
 					status: "ERR",
@@ -27,6 +27,7 @@ const UserController = {
 					password,
 					confirmPassword,
 					phone,
+					isAdmin
 				});
 				return res.status(200).json(data);
 			}

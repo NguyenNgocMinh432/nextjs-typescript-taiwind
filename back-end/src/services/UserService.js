@@ -2,9 +2,10 @@ import User from "../model/UserModel.js";
 import bcrypt from "bcrypt";
 import { generalAccessToken, generalRefreshToken } from "../middleware/jwt.js";
 const createUser = (newUser) => {
+	console.log(newUser);
 	return new Promise(async (resolve, reject) => {
 		try {
-			const { name, email, password, confirmPassword, phone } = newUser;
+			const { name, email, password, confirmPassword, phone, isAdmin } = newUser;
 			const checkUser = await User.findOne({
 				email: email,
 			});
@@ -23,6 +24,7 @@ const createUser = (newUser) => {
 					password: hash,
 					confirmPassword,
 					phone,
+					isAdmin
 				});
 				if (createUser) {
 					resolve({
