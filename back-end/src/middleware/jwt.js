@@ -3,7 +3,7 @@ export const generalAccessToken = (payload) => {
     const SIGNATURE = process.env.SIGNATURE;
     const accessToken = jwt.sign({
         payload
-    }, SIGNATURE, { expiresIn: '1h' } )
+    }, SIGNATURE, { expiresIn: '30s' } )
     return accessToken
 }
 

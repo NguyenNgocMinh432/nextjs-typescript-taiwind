@@ -122,6 +122,9 @@ const UserController = {
 		} catch (err) {
 
 		}
+	},
+	refreshToken: async (req, res) => {
+
 	}
 };
 export default UserController;
