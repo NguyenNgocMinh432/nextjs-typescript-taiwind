@@ -27,7 +27,7 @@ const UserController = {
 					password,
 					confirmPassword,
 					phone,
-					isAdmin
+					isAdmin,
 				});
 				return res.status(200).json(data);
 			}
@@ -90,20 +90,15 @@ const UserController = {
 			}
 			const response = await UserService.deleteUser(userId);
 			return res.status(200).json(response);
-		}catch(err) {
-
-		}
+		} catch (err) {}
 	},
 	getAll: async (req, res) => {
 		try {
 			const response = await UserService.getAllUser();
 			return res.status(200).json(response);
-		} catch(err) {
-
-		}
+		} catch (err) {}
 	},
 	getDetailUser: async (req, res) => {
-		console.log("req", req);
 		try {
 			const userId = req.params.id;
 			console.log(userId);
@@ -117,14 +112,26 @@ const UserController = {
 			return res.status(200).json({
 				status: "OK",
 				message: "get detail successfully",
-				data: response
-			})
-		} catch (err) {
-
-		}
+				data: response,
+			});
+		} catch (err) {}
 	},
 	refreshToken: async (req, res) => {
-
-	}
+		try {
+			const token = req.headers.token.split(' ')[1];
+			if (!token) {
+				return res.status(200).json({
+					status: "ERR",
+					message: "token is required",
+				});
+			}
+			const response = await UserService.refreshTokenServices(token);
+			return res.status(200).json({
+				status: "OK",
+				message: "get detail successfully",
+				data: response,
+			});
+		} catch (err) {}
+	},
 };
 export default UserController;

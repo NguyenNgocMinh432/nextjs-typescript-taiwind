@@ -1,6 +1,8 @@
 import User from "../model/UserModel.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { generalAccessToken, generalRefreshToken } from "../middleware/jwt.js";
+const SIGNATURE = process.env.SIGNATURE;
 const createUser = (newUser) => {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -25,7 +27,7 @@ const createUser = (newUser) => {
 					phone,
 					isAdmin,
 					access_token,
-					refresh_token
+					refresh_token,
 				});
 				if (createUser) {
 					resolve({
@@ -129,36 +131,54 @@ const deleteUser = (userId) => {
 	});
 };
 const getAllUser = () => {
-	return new Promise(async(resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
 		const response = await User.find();
 		resolve({
 			status: "SUCCESS",
 			message: "get user successfully",
-			data: response
+			data: response,
 		});
-	})
-}
+	});
+};
 const getDetailUser = (userId) => {
-	console.log("userId", userId);
 	return new Promise(async (resolve, reject) => {
 		try {
 			const user = await User.find({
-				_id:userId
-			})
+				_id: userId,
+			});
 			if (!user) {
 				resolve({
-					status: 'error',
-					message: "user is not defined"
-				})
+					status: "error",
+					message: "user is not defined",
+				});
 			}
 			resolve({
-				status: 'success',
+				status: "success",
 				message: "get detail successfully",
-				data: user
-			})
-		} catch (err) {
-
-		}
-	})
-}
-export default { createUser, loginUser, deleteUser, getAllUser, getDetailUser };
+				data: user,
+			});
+		} catch (err) {}
+	});
+};
+const refreshTokenServices = (token) => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			jwt.verify(token, SIGNATURE, (err, result) => {
+				if (err) {
+					resolve({
+						status: "ERR",
+						message: "token is required",
+					});
+				}
+				const { payload } = result;
+				const access_token = generalAccessToken(payload);
+				resolve({
+					status: "OK",
+					message: "SUCCESS",
+					data: access_token,
+				});
+			});
+		} catch (err) {}
+	});
+};
+export default { createUser, loginUser, deleteUser, getAllUser, getDetailUser, refreshTokenServices };
